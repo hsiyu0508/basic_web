@@ -54,36 +54,7 @@ class AllProductView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # @swagger_auto_schema(
-    #     operation_summary='修改產品',
-    #     operation_description='修改產品',
-    #     request_body=openapi.Schema(
-    #         type=openapi.TYPE_OBJECT,
-    #         properties={
-    #             'name': openapi.Schema(
-    #                 type=openapi.TYPE_STRING,
-    #                 description='產品名稱'
-    #             ),
-    #             'price': openapi.Schema(
-    #                 type=openapi.TYPE_INTEGER,
-    #                 description='價錢'
-    #             ),
-    #             # 'status': openapi.Schema(
-    #             #     type=openapi.TYPE_INTEGER,
-    #             #     description='啟用狀態 0關 1開'
-    #             # )
-    #         }
-    #     ),
-    # )
-    # def put(self, request, format=None):
-    #     product = self.request.query_params.get('name')
-    #     print(product)
-    #     product = Product.objects.filter(name=product)
-    #     serializer = ProductSerializer(product,data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
 
 class ProductView(APIView):
 
@@ -102,67 +73,37 @@ class ProductView(APIView):
         serializer = ProductSerializer(product)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-    # @swagger_auto_schema(
-    #     operation_summary='新增產品',
-    #     operation_description='新增產品',
-    #     request_body=openapi.Schema(
-    #         type=openapi.TYPE_OBJECT,
-    #         properties={
-    #             'name': openapi.Schema(
-    #                 type=openapi.TYPE_STRING,
-    #                 description='產品名稱'
-    #             ),
-    #             'price': openapi.Schema(
-    #                 type=openapi.TYPE_INTEGER,
-    #                 description='價錢'
-    #             ),
-    #             'status': openapi.Schema(
-    #                 type=openapi.TYPE_INTEGER,
-    #                 description='啟用狀態 0關 1開'
-    #             )
-    #         }
-    #     )
-    # )
-    # def post(self, request, format=None):
+    @swagger_auto_schema(
+        operation_summary='修改產品',
+        operation_description='修改產品',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'name': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description='產品名稱'
+                ),
+                'price': openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                    description='價錢'
+                ),
+                'status': openapi.Schema(
+                    type=openapi.TYPE_BOOLEAN,
+                    description='啟用狀態 0關 1開'
+                )
+            }
+        )
+    )
+    def put(self, request,product_name, format=None):
+        print(request)
+        product = self.get_object(product_name)
+        serializer = ProductSerializer(instance=product, data=request.data)
 
-    #     serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-    #     if serializer.is_valid():
-    #         print(serializer)
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    # @swagger_auto_schema(
-    #     operation_summary='修改產品',
-    #     operation_description='修改產品',
-    #     request_body=openapi.Schema(
-    #         type=openapi.TYPE_OBJECT,
-    #         properties={
-    #             'name': openapi.Schema(
-    #                 type=openapi.TYPE_STRING,
-    #                 description='產品名稱'
-    #             ),
-    #             'price': openapi.Schema(
-    #                 type=openapi.TYPE_INTEGER,
-    #                 description='價錢'
-    #             ),
-    #             'status': openapi.Schema(
-    #                 type=openapi.TYPE_INTEGER,
-    #                 description='啟用狀態 0關 1開'
-    #             )
-    #         }
-    #     )
-    # )
-    # def put(self, request, format=None):
-
-    #     product = Product.objects.filter(status="1")
-    #     serializer = ProductSerializer(product,data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     @swagger_auto_schema(
         operation_summary='刪除產品',
         operation_description='刪除產品',
